@@ -1,2 +1,6 @@
 **/files/
 notes/
+
+venv/
+__pycache__/
+.vscode/
