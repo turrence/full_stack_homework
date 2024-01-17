@@ -1,8 +1,8 @@
 import hug
-from db import DB, DAO
+from db import DAO
 
 db_config = {
-    'host':'localhost',
+    'host':'db',
     'port':'3306',
     'database':'machina_labs',
     'user':'root',
