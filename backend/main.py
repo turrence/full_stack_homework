@@ -1,6 +1,8 @@
 import hug
 from db import DAO
 
+api = hug.API(__name__)
+
 db_config = {
     'host':'db',
     'port':'3306',
@@ -20,7 +22,11 @@ dao = DAO(db_config)
         2. geometry_file_uuid (do not preview these)
 """
 
-@hug.get("/get_files_by_customer")
+def cors_support(response, *args, **kwargs):
+    response.set_header('Access-Control-Allow-Origin', '*')
+
+
+@hug.get("/get_files_by_customer", requires=cors_support)
 def get_files_by_customer():
     """
         get files by customer (display: customer.name)
@@ -58,7 +64,7 @@ def get_files_by_customer():
             ret[name] = [(fpath, ftype)]
     return {'data': ret}
 
-@hug.get("/get_files_by_part")
+@hug.get("/get_files_by_part", requires=cors_support)
 def get_files_by_part():
     """
      show files by part (display: part.name)
@@ -93,7 +99,7 @@ def get_files_by_part():
 
     return {'data': ret}
 
-@hug.get("/get_files_by_revision")
+@hug.get("/get_files_by_revision", requires=cors_support)
 def get_files_by_revision():
     """
         show files by part_revision (display: part_revision.name)
@@ -123,7 +129,7 @@ def get_files_by_revision():
             ret[name] = [(fpath, ftype)]
     return {'data': ret}
 
-@hug.get("/get_files_by_trial")
+@hug.get("/get_files_by_trial", requires=cors_support)
 def get_files_by_trial():
     """
     only shows the file_artifacts
