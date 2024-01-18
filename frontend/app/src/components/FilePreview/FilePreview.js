@@ -9,13 +9,14 @@ export default function FilePreview({ file }) {
     const [fileContent, setFileContent] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
+    let filePath = "/files/" + path
     let fileName = getFileNameFromPath(path);
 
     useEffect(() => {
         setIsLoading(true);
 
         if (fileType === "artifact") {
-            fetch(path)
+            fetch(filePath)
                 .then(response => response.text())
                 .then((text) => {
                     setFileContent(text.slice(0, 500));
@@ -25,7 +26,7 @@ export default function FilePreview({ file }) {
             setFileContent("");
             setIsLoading(false);
         }
-    }, [fileType, path])
+    }, [fileType, filePath])
 
     return (
         <div className="preview">
@@ -36,7 +37,7 @@ export default function FilePreview({ file }) {
                         (fileType === "geometry") ? "(geometry file)" : fileContent
                     }
                 </p>
-                {path !== "" && <a href={path} target="_blank" rel="noreferrer"><button>Download</button></a>}
+                {path !== "" && <a href={filePath} target="_blank" rel="noreferrer"><button>Download</button></a>}
             </div>
         </div>
     )

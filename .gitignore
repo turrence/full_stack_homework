@@ -5,6 +5,7 @@ venv/
 __pycache__/
 .vscode/
 customers/
+files/
 
 # dependencies
 node_modules
