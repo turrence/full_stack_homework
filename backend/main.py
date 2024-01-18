@@ -28,9 +28,7 @@ def cors_support(response, *args, **kwargs):
 
 @hug.get("/get_files_by_customer", requires=cors_support)
 def get_files_by_customer():
-    """
-        get files by customer (display: customer.name)
-    """
+    """get files by customer (display: customer.name)"""
     query = " \
     SELECT name, location, file_type FROM ( \
         SELECT customer.name, file.location, 'geometry' as file_type FROM \
@@ -56,19 +54,17 @@ def get_files_by_customer():
                 ON process_run_file_artifact.file_artifact_uuid = file.uuid \
     ) n;"
     data = dao.select(query)
-    ret: dict[str, list[tuple[str, str]]] = {}
+    ret: dict[str, list[dict]] = {}
     for name, fpath, ftype in data:
         if name in ret:
-            ret[name].append((fpath, ftype))
+            ret[name].append({'path': fpath, 'fileType': ftype})
         else:
-            ret[name] = [(fpath, ftype)]
+            ret[name] = [{'path': fpath, 'fileType': ftype}]
     return {'data': ret}
 
 @hug.get("/get_files_by_part", requires=cors_support)
 def get_files_by_part():
-    """
-     show files by part (display: part.name)
-    """
+    """show files by part (display: part.name)"""
     query = " \
     SELECT name, location, file_type FROM ( \
         SELECT part.name, file.location, 'geometry' as file_type FROM \
@@ -90,12 +86,12 @@ def get_files_by_part():
                 ON process_run_file_artifact.file_artifact_uuid = file.uuid \
     ) n;"
     data = dao.select(query)
-    ret: dict[str, list[tuple[str, str]]] = {}
+    ret: dict[str, list[dict]] = {}
     for name, fpath, ftype in data:
         if name in ret:
-            ret[name].append((fpath, ftype))
+            ret[name].append({'path': fpath, 'fileType': ftype})
         else:
-            ret[name] = [(fpath, ftype)]
+            ret[name] = [{'path': fpath, 'fileType': ftype}]
 
     return {'data': ret}
 
@@ -121,27 +117,17 @@ def get_files_by_revision():
                 ON process_run_file_artifact.file_artifact_uuid = file.uuid \
     ) f;"
     data = dao.select(query)
-    ret: dict[str, list[tuple[str, str]]] = {}
+    ret: dict[str, list[dict]] = {}
     for name, fpath, ftype in data:
         if name in ret:
-            ret[name].append((fpath, ftype))
+            ret[name].append({'path': fpath, 'fileType': ftype})
         else:
-            ret[name] = [(fpath, ftype)]
+            ret[name] = [{'path': fpath, 'fileType': ftype}]
     return {'data': ret}
 
 @hug.get("/get_files_by_trial", requires=cors_support)
 def get_files_by_trial():
-    """
-    only shows the file_artifacts
-    show files by trial (display: trial.success) can be 0, 1, or NULL
-        
-        trial on process_run.trial_uuid = trial
-        trial join process_run on trial.part_revision_uuid = part_revision.uuid
-        
-        0 is false
-        1 is true
-        null is a possible value
-    """
+    """only shows the file_artifacts, show files by trial (display: trial.success) can be Failed, Success, or Pending"""
     query = """ \
         SELECT trial.success, process_run.type, file.location, 'artifact' as file_type FROM \
             trial JOIN part_revision\
@@ -154,10 +140,15 @@ def get_files_by_trial():
                 ON process_run_file_artifact.file_artifact_uuid = file.uuid;
     """
     data = dao.select(query)
-    ret: dict[str, list[tuple[str, str]]] = {}
+    ret: dict[str, list[dict]] = {}
+    mapping = {"0": "Failed", "1": "Success", "null": "Pending"}
     for trial_res, run_type, fpath, ftype in data:
-        if trial_res in ret:
-            ret[trial_res].append((run_type, fpath, ftype))
+        if trial_res is None:
+            key = "Pending"
         else:
-            ret[trial_res] = [(run_type, fpath, ftype)]
+            key = mapping[str(trial_res)]
+        if key in ret:
+            ret[key].append({'path': fpath, 'fileType': ftype, 'process': run_type})
+        else:
+            ret[key] = [{'path': fpath, 'fileType': ftype, 'process': run_type}]
     return {'data': ret}

@@ -1,68 +1,65 @@
 import { useEffect, useState } from "react"
+import { Tree } from "@geist-ui/core"
 import axios from "axios";
+import { getFileNameFromPath } from "../utils";
 
-function renderDictionary(k, v){
-    //  "name1": [[file_path, file_type], [2], ...]
-    return (
-        <div>
-            <p>{k}</p>
-            {v.map((data, _) => (
-                <p>{data[0]}, {data[1]}</p>
-            ))}
-            <p></p>
-        </div>
-    )
-}
-
-export default function FileTreeSelector({ field }) {
+export default function FileTreeSelector({ field, setFile }) {
     // "customer", "part", "revision", "trial"
 
-    const [ folderData, setFolderData ] = useState({});
+    // this probably shouldn't be here
+    const apiBaseURL = "http://localhost:8000/";
+    
+    const [folderData, setFolderData] = useState({});
 
     useEffect(() => {
         const urlToGet = (f) => {
-            let url = "http://localhost:8000/"
+            let url = apiBaseURL
             switch (field) {
                 case "customer":
                     url += "get_files_by_customer"
-                break;
+                    break;
                 case "part":
                     url += "get_files_by_part"
-                break;
+                    break;
                 case "revision":
                     url += "get_files_by_revision"
-                break;
+                    break;
                 case "trial":
                     url += "get_files_by_trial"
-                break;
+                    break;
                 default:
                     url += "get_files_by_customer"
-                break;
-            }   
-            return url 
+                    break;
+            }
+            return url
         }
 
         axios.get(urlToGet(field)).then((response) => {
+            console.log(response.data.data)
             setFolderData(response.data.data);
         }).catch((e) => {
             console.error("error" + e)
         })
     }, [field]);
 
-    let meClick = () => {
-        Object.entries(folderData).map((key, value) => {
-            console.log(key);
-            console.log(value);
-        });
+    let fileClick = (path, ftype) => {
+        setFile({ 'path': path, 'fileType': ftype })
     }
 
     return (<div>
-        <button onClick={() => {meClick()}}>debug</button>
         <div>
-            {Object.entries(folderData).map((key, ...value) => <div>
-                <h1>{key}</h1> 
-                <p>{value}</p>
-            </div>)}
+            <Tree>
+                {Object.entries(folderData).map((key, index) => {
+                    let name = key[0];
+                    let data = key[1];
+                    return <Tree.Folder key={index} name={name}>
+                        {data.map((d, ind2) => {
+                            let { path, fileType } = d;
+                            return (<Tree.File key={ind2} name={getFileNameFromPath(path)} onClick={() => fileClick(path, fileType)}></Tree.File>)
+                        })}
+                    </Tree.Folder>
+                })}
+            </Tree>
         </div>
     </div>)
 }

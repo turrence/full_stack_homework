@@ -2,6 +2,23 @@
   text-align: center;
 }
 
+.app {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.sidebar {
+    flex-basis: 33%;
+    padding: 20px;
+    border: 1px solid black;
+}
+
+.main-content {
+    flex-basis: 60%;
+    padding: 20px;
+    border: 1px solid black;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
