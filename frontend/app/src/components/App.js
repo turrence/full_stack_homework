@@ -5,28 +5,21 @@ import './App.css';
 import FieldSelector from './FieldSelector/FieldSelector'
 import FileTreeSelector from './FileTreeSelector/FileTreeSelector'
 import FilePreview from './FilePreview/FilePreview'
-import { getFileNameFromPath } from './utils'
-
 
 function App() {
-    const fieldsToOrganizeBy = ["customer", "part", "revision", "trial"]
+    const fieldsToOrganizeBy = ["customer", "part", "part revision", "trial"]
 
-    const [ selectedField, setSelectedField ] = useState(fieldsToOrganizeBy[0])
-    const [ selectedFile, setSelectedFile ] = useState({'path': '', 'fileType': ''})
-    
-    let fileName = getFileNameFromPath(selectedFile.path)
+    const [selectedField, setSelectedField] = useState(fieldsToOrganizeBy[0])
+    const [selectedFile, setSelectedFile] = useState({ 'path': '', 'fileType': '' })
 
     return (
-        <div class="app">
+        <div className="app">
             <GeistProvider>
-                <div class="sidebar">
-                    <button onClick={() => {}}>debug global</button>
-                    <h1>{selectedField}</h1>
-                    <h3>{fileName}</h3>
-                    <FieldSelector fields={fieldsToOrganizeBy} setField={setSelectedField}></FieldSelector>
+                <div className="sidebar">
+                    <FieldSelector fields={fieldsToOrganizeBy} setField={setSelectedField} currentField={selectedField}></FieldSelector>
                     <FileTreeSelector field={selectedField} setFile={setSelectedFile}></FileTreeSelector>
                 </div>
-                <div class="main-content">
+                <div className="main-content">
                     <FilePreview file={selectedFile}></FilePreview>
                 </div>
             </GeistProvider>

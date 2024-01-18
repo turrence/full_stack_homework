@@ -4,6 +4,7 @@ notes/
 venv/
 __pycache__/
 .vscode/
+customers/
 
 # dependencies
 node_modules

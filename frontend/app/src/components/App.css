@@ -15,6 +15,7 @@
 
 .main-content {
     flex-basis: 60%;
+    max-width: 60%;
     padding: 20px;
     border: 1px solid black;
 }

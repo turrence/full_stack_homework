@@ -21,7 +21,7 @@ export default function FileTreeSelector({ field, setFile }) {
                 case "part":
                     url += "get_files_by_part"
                     break;
-                case "revision":
+                case "part revision":
                     url += "get_files_by_revision"
                     break;
                 case "trial":
@@ -35,7 +35,6 @@ export default function FileTreeSelector({ field, setFile }) {
         }
 
         axios.get(urlToGet(field)).then((response) => {
-            console.log(response.data.data)
             setFolderData(response.data.data);
         }).catch((e) => {
             console.error("error" + e)
