@@ -1,6 +1,17 @@
-# Getting Started with Create React App
+# Instructions
+To run locally:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Check if database is running.
+2. Make sure `backend` is up and running. Instructions are in the `backend` README.
+
+### 1. `npm install`
+
+### 2. `unzip files.zip -d ./public/`
+Unpackages the downloadable files for users to download them.
+
+### 3. `npm start`
+Runs the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ## Available Scripts
 
