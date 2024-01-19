@@ -37,6 +37,7 @@ Our users are our Machina teammates who are doing the R&D for customers. We stor
 # Running the Application
 ## Docker Containers
 The docker-compose file has been updated to run the database, backend, and frontend services.
+
 You can start the application as follows. The first time it runs, it will run `init.sql` to create tables and populate them with some seed data.  
 ```
 docker compose up
